@@ -1,0 +1,1 @@
+MODEL_GEMINI_2_5_PRO = "gemini-2.5-pro"

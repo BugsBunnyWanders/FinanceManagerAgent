@@ -1,0 +1,22 @@
+# Copy this file to .env and update with your actual values
+
+# Google AI Configuration
+GOOGLE_API_KEY=your_google_api_key_here
+
+# MongoDB Configuration
+# For local MongoDB:
+# MONGODB_URI=mongodb://localhost:27017/
+
+# For MongoDB Atlas (recommended):
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DATABASE=finance_manager
+
+# Application Configuration
+USER_ID=default_user
+DEFAULT_CURRENCY=USD
+LOG_LEVEL=INFO
+
+# Optional: Google Cloud Project (if using Vertex AI)
+# GOOGLE_CLOUD_PROJECT=your_project_id
+# GOOGLE_CLOUD_LOCATION=us-central1
+
