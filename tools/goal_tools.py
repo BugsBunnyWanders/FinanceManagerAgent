@@ -12,8 +12,8 @@ def set_goal(
     name: str,
     target_amount: float,
     deadline: str,
-    priority: str = "medium",
-    current_amount: float = 0.0
+    priority: Optional[str],
+    current_amount: float
 ) -> Dict[str, Any]:
     """
     Create or update a financial goal.
@@ -24,7 +24,7 @@ def set_goal(
         target_amount: Target amount to achieve
         deadline: Deadline in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
         priority: Goal priority (high, medium, low)
-        current_amount: Current progress (default: 0.0)
+        current_amount: Current progress
     
     Returns:
         Dictionary with goal information and confirmation
@@ -39,6 +39,9 @@ def set_goal(
         except ValueError:
             deadline_dt = datetime.strptime(deadline, '%Y-%m-%d')
         
+        # Handle optional parameters
+        priority_val = priority if priority else "medium"
+        
         # Create goal object
         goal = Goal(
             goal_id=str(uuid.uuid4()),
@@ -48,7 +51,7 @@ def set_goal(
             target_amount=target_amount,
             current_amount=current_amount,
             deadline=deadline_dt,
-            priority=Priority(priority.lower()),
+            priority=Priority(priority_val.lower()),
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
@@ -67,7 +70,7 @@ def set_goal(
                     "target_amount": target_amount,
                     "current_amount": current_amount,
                     "deadline": deadline,
-                    "priority": priority,
+                    "priority": priority_val,
                     "progress_percentage": goal.progress_percentage()
                 }
             }
@@ -92,7 +95,7 @@ def set_goal(
         }
 
 
-def get_goal(goal_id: Optional[str] = None) -> Dict[str, Any]:
+def get_goal(goal_id: Optional[str]) -> Dict[str, Any]:
     """
     Retrieve financial goal(s).
     
@@ -234,4 +237,3 @@ def update_goal_progress(goal_id: str, amount_to_add: float) -> Dict[str, Any]:
             "message": "Error updating goal progress",
             "error": str(e)
         }
-

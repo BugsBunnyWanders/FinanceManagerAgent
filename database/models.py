@@ -13,6 +13,17 @@ class GoalType(str, Enum):
     EMERGENCY_FUND = "emergency_fund"
 
 
+class InvestmentType(str, Enum):
+    """Types of investments."""
+    STOCK = "stock"
+    CRYPTO = "crypto"
+    ETF = "etf"
+    BOND = "bond"
+    REAL_ESTATE = "real_estate"
+    MUTUAL_FUND = "mutual_fund"
+    OTHER = "other"
+
+
 class Priority(str, Enum):
     """Priority levels for goals."""
     HIGH = "high"
@@ -133,3 +144,55 @@ class ExpenseFilter(BaseModel):
         """Pydantic configuration."""
         use_enum_values = True
 
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+
+
+class Investment(BaseModel):
+    """Investment model."""
+    investment_id: str = Field(..., description="Unique identifier for the investment")
+    user_id: str = Field(..., description="User identifier")
+    symbol: str = Field(..., description="Ticker symbol (e.g., AAPL, BTC)")
+    name: str = Field(..., description="Name of the investment")
+    quantity: float = Field(..., gt=0, description="Quantity owned")
+    purchase_price: float = Field(..., gt=0, description="Price per unit at purchase")
+    current_price: Optional[float] = Field(None, description="Current market price per unit")
+    investment_type: InvestmentType = Field(..., description="Type of investment")
+    purchase_date: datetime = Field(default_factory=datetime.utcnow, description="Date of purchase")
+    notes: Optional[str] = Field(None, description="Additional notes")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+    
+    def to_dict(self) -> dict:
+        """Convert to dictionary for MongoDB."""
+        return {
+            "investment_id": self.investment_id,
+            "user_id": self.user_id,
+            "symbol": self.symbol,
+            "name": self.name,
+            "quantity": self.quantity,
+            "purchase_price": self.purchase_price,
+            "current_price": self.current_price,
+            "investment_type": self.investment_type,
+            "purchase_date": self.purchase_date,
+            "notes": self.notes,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+    
+    @property
+    def total_cost(self) -> float:
+        """Calculate total cost basis."""
+        return self.quantity * self.purchase_price
+        
+    @property
+    def current_value(self) -> Optional[float]:
+        """Calculate current total value if price is available."""
+        if self.current_price is not None:
+            return self.quantity * self.current_price
+        return None

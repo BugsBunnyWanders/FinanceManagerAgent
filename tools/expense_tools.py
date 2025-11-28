@@ -11,7 +11,7 @@ def set_expense(
     amount: float,
     category: str,
     description: str,
-    date: Optional[str] = None
+    date: Optional[str]
 ) -> Dict[str, Any]:
     """
     Add a new expense and update account balance.
@@ -111,10 +111,10 @@ def set_expense(
 
 
 def get_expenses(
-    start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
-    category: Optional[str] = None,
-    limit: int = 50
+    start_date: Optional[str],
+    end_date: Optional[str],
+    category: Optional[str],
+    limit: int
 ) -> Dict[str, Any]:
     """
     Retrieve expenses with optional filters.
@@ -257,8 +257,8 @@ def get_current_account_balance() -> Dict[str, Any]:
 
 def set_account_balance(
     balance: float,
-    monthly_income: Optional[float] = None,
-    monthly_expense_threshold: Optional[float] = None
+    monthly_income: Optional[float],
+    monthly_expense_threshold: Optional[float]
 ) -> Dict[str, Any]:
     """
     Set or update account balance and monthly parameters.
